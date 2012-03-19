@@ -17,6 +17,11 @@ module ActiveRecord
   class Base
     
     def self.sqlserver_connection(config) #:nodoc:
+      
+      if (config.kind_of? HashWithIndifferentAccess)
+        config = Hash[config.keys.map{|k| [k,config[k]]}]
+      end
+
       config = config.dup.symbolize_keys!
       config.reverse_merge! :mode => :odbc, :host => 'localhost', :username => 'sa', :password => ''
       mode = config[:mode].to_s.downcase.underscore.to_sym
@@ -166,7 +171,7 @@ module ActiveRecord
       ADAPTER_NAME                = 'SQLServer'.freeze
       VERSION                     = '3.0.9'.freeze
       DATABASE_VERSION_REGEXP     = /Microsoft SQL Server\s+(\d{4})/
-      SUPPORTED_VERSIONS          = [2005,2008].freeze
+      SUPPORTED_VERSIONS          = [2000,2005,2008].freeze
       
       attr_reader :database_version, :database_year,
                   :connection_supports_native_types
@@ -302,7 +307,7 @@ module ActiveRecord
       end
       
       def native_text_database_type
-        @@native_text_database_type || enable_default_unicode_types ? 'nvarchar(max)' : 'varchar(max)'
+        @@native_text_database_type || 'varchar(8000)'
       end
       
       def native_time_database_type
