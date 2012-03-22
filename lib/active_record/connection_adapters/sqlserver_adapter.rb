@@ -356,6 +356,8 @@ module ActiveRecord
                         encoding = config[:encoding].present? ? config[:encoding] : nil
                         TinyTds::Client.new({ 
                           :dataserver    => config[:dataserver],
+						  :host          => config[:host],
+                          :port          => config[:port],
                           :username      => config[:username],
                           :password      => config[:password],
                           :database      => config[:database],
