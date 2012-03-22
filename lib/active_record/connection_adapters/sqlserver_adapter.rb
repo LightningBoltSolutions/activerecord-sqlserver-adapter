@@ -23,12 +23,12 @@ module ActiveRecord
       end
 
       config = config.dup.symbolize_keys!
-      config.reverse_merge! :mode => :odbc, :host => 'localhost', :username => 'sa', :password => ''
+      config.reverse_merge! :mode => :dblib, :host => 'localhost', :username => 'sa', :password => ''
       mode = config[:mode].to_s.downcase.underscore.to_sym
       case mode
       when :dblib
-        raise ArgumentError, 'Missing :dataserver configuration.' unless config.has_key?(:dataserver)
-        require_library_or_gem 'tiny_tds'
+        require 'tiny_tds'
+        warn("TinyTds v0.4.3 or higher required. Using #{TinyTds::VERSION}") unless TinyTds::Client.instance_methods.map(&:to_s).include?("active?")
       when :odbc
         raise ArgumentError, 'Missing :dsn configuration.' unless config.has_key?(:dsn)
         if RUBY_VERSION < '1.9'
