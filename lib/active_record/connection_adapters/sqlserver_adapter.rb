@@ -354,6 +354,7 @@ module ActiveRecord
                         login_timeout = config[:login_timeout].present? ? config[:login_timeout].to_i : nil
                         timeout = config[:timeout].present? ? config[:timeout].to_i/1000 : nil
                         encoding = config[:encoding].present? ? config[:encoding] : nil
+						tds_version = config[:tds_version].present? ? config[:tds_version] : 7.2
                         TinyTds::Client.new({ 
                           :dataserver    => config[:dataserver],
 						  :host          => config[:host],
@@ -364,7 +365,8 @@ module ActiveRecord
                           :appname       => appname,
                           :login_timeout => login_timeout,
                           :timeout       => timeout,
-                          :encoding      => encoding
+                          :encoding      => encoding,
+						  :tds_version	 => tds_version
                         }).tap do |client|
                           client.execute("SET ANSI_DEFAULTS ON").do
                           client.execute("SET IMPLICIT_TRANSACTIONS OFF").do
